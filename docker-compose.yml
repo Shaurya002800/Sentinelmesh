@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: sentinel_mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    restart: always
+
+  influxdb:
+    image: influxdb:2.7
+    container_name: sentinel_influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    restart: always
+
+  backend:
+    build: ./backend
+    container_name: sentinel_backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mosquitto
+      - influxdb
+    env_file:
+      - ./backend/.env
+    restart: always
+
+volumes:
+  influxdb_data:

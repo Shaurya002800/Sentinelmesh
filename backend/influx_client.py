@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
@@ -13,13 +13,18 @@ class ThreatInfluxClient:
         self.enabled = bool(INFLUX_URL and INFLUX_TOKEN)
         self.client = None
         self.write_api = None
+        self.last_error = None
 
         if self.enabled:
-            self.client = InfluxDBClient(url=INFLUX_URL, token=INFLUX_TOKEN, org=INFLUX_ORG)
-            self.write_api = self.client.write_api(write_options=SYNCHRONOUS)
+            try:
+                self.client = InfluxDBClient(url=INFLUX_URL, token=INFLUX_TOKEN, org=INFLUX_ORG)
+                self.write_api = self.client.write_api(write_options=SYNCHRONOUS)
+            except Exception as exc:
+                self.enabled = False
+                self.last_error = str(exc)
 
     def write_event(self, event: Dict[str, Any], analysis: Dict[str, Any]) -> None:
-        if not self.enabled:
+        if not self.enabled or self.write_api is None:
             return
 
         point = (
@@ -38,7 +43,13 @@ class ThreatInfluxClient:
             .time(event.get("timestamp"), WritePrecision.NS)
         )
 
-        self.write_api.write(bucket=INFLUX_BUCKET, org=INFLUX_ORG, record=point)
+        try:
+            self.write_api.write(bucket=INFLUX_BUCKET, org=INFLUX_ORG, record=point)
+            self.last_error = None
+        except Exception as exc:
+            # Keep the backend alive even if Influx credentials are wrong during setup.
+            self.last_error = str(exc)
+            self.enabled = False
 
     def close(self) -> None:
         if self.client:
