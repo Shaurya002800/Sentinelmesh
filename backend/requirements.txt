@@ -1,0 +1,7 @@
+Flask==3.0.3
+flask-cors==4.0.1
+paho-mqtt==1.6.1
+influxdb-client==1.43.0
+python-dotenv==1.0.1
+web3==6.20.1
+joblib==1.4.2
