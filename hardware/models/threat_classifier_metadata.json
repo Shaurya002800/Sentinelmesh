@@ -1,0 +1,19 @@
+{
+  "model_name": "sentinelmesh-edge-threshold-v1",
+  "features": [
+    "packet_size",
+    "duration_ms",
+    "src_port",
+    "dst_port",
+    "failed_logins",
+    "request_rate",
+    "payload_size",
+    "touch_count"
+  ],
+  "thresholds": {
+    "failed_logins": 5,
+    "request_rate": 100,
+    "touch_count": 1
+  },
+  "notes": "Placeholder edge-model metadata. Replace with a real TFLite export when TensorFlow Lite conversion is available."
+}

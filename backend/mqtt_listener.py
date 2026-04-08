@@ -18,6 +18,7 @@ from config import (
     MQTT_PORT,
     MQTT_TOPIC,
 )
+from geolocation import GeoLocator
 from influx_client import ThreatInfluxClient
 
 
@@ -57,6 +58,7 @@ class MQTTThreatListener:
         self.classifier = ThreatClassifier()
         self.influx = ThreatInfluxClient()
         self.blockchain = BlockchainAnchor()
+        self.geolocator = GeoLocator()
         self.connected = False
         self.start_error = None
 
@@ -83,6 +85,7 @@ class MQTTThreatListener:
         payload.setdefault("timestamp", datetime.now(timezone.utc).isoformat())
         payload.setdefault("device_id", "esp32-node-1")
         payload.setdefault("event_type", "network")
+        payload = self.geolocator.enrich(payload)
 
         analysis = self.classifier.analyze(payload)
         blockchain_result = {

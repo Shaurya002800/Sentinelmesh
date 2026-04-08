@@ -51,7 +51,7 @@ class BlockchainAnchor:
             }
 
         try:
-            nonce = self.web3.eth.get_transaction_count(self.account.address)
+            nonce = self.web3.eth.get_transaction_count(self.account.address, "pending")
             tx = self.contract.functions.storeIncident(bytes.fromhex(incident_hash)).build_transaction({
                 "from": self.account.address,
                 "nonce": nonce,

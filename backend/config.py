@@ -34,3 +34,7 @@ MODEL_PATH = BASE_DIR / "models" / "isolation_forest.pkl"
 MAX_EVENTS_IN_MEMORY = int(os.getenv("MAX_EVENTS_IN_MEMORY", 200))
 ANCHOR_ON_TAMPER = os.getenv("ANCHOR_ON_TAMPER", "true").lower() == "true"
 ANCHOR_RISK_THRESHOLD = float(os.getenv("ANCHOR_RISK_THRESHOLD", 0.8))
+
+# Geolocation
+GEOLOCATION_ENABLED = os.getenv("GEOLOCATION_ENABLED", "true").lower() == "true"
+GEOLOCATION_LOOKUP_TIMEOUT = float(os.getenv("GEOLOCATION_LOOKUP_TIMEOUT", 2.0))

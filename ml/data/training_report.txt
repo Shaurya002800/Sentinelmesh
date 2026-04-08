@@ -1,0 +1,41 @@
+SentinelMesh Training Report
+==========================
+Rows: 9100
+Train rows: 6825
+Test rows: 2275
+Contamination: 0.214
+Hybrid threshold: 0.56
+
+Binary Attack Detection
+-----------------------
+[[1625    0]
+ [   0  650]]
+              precision    recall  f1-score   support
+
+      normal      1.000     1.000     1.000      1625
+      attack      1.000     1.000     1.000       650
+
+    accuracy                          1.000      2275
+   macro avg      1.000     1.000     1.000      2275
+weighted avg      1.000     1.000     1.000      2275
+
+
+Actor Classification (attack rows only)
+--------------------------------------
+              precision    recall  f1-score   support
+
+         bot      1.000     1.000     1.000       204
+       human      1.000     1.000     1.000       240
+         apt      1.000     1.000     1.000       206
+
+    accuracy                          1.000       650
+   macro avg      1.000     1.000     1.000       650
+weighted avg      1.000     1.000     1.000       650
+
+
+Average normal blended score: 0.1787
+Average attack blended score: 0.8611
+Average normal anomaly score: 0.4691
+Average attack anomaly score: 0.6362
+Average normal attack probability: 0.0007
+Average attack probability: 0.9989
