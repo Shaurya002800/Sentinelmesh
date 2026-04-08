@@ -65,16 +65,25 @@ def get_nodes():
     return jsonify(list(nodes.values()))
 
 
-@app.post("/api/simulate")
-def simulate():
-    payload = request.get_json(force=True, silent=True) or {}
-    listener.on_message(
-        None,
-        None,
-        type("MockMsg", (), {"payload": json.dumps(payload).encode("utf-8")})(),
-    )
-    return jsonify({"message": "Simulated event ingested"}), 201
+@app.route('/api/simulate', methods=['POST'])
+def receive_data():
+    data = request.json
+    print("Received from ESP32:", data)  # 👈 THIS LINE IS IMPORTANT
+    return {"status": "ok"}, 201
 
 
 if __name__ == "__main__":
     app.run(host=FLASK_HOST, port=FLASK_PORT, debug=FLASK_DEBUG)
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+@app.route('/data', methods=['POST'])
+def receive_data():
+    data = request.json
+    print("Received from ESP32:", data)
+
+    return jsonify({"status": "ok"})
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5001)
